@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "490755196622",
+    "project_id": "weather-a4e99",
+    "storage_bucket": "weather-a4e99.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490755196622:android:b3468beac1993223ea729f",
+        "android_client_info": {
+          "package_name": "com.example.weather_tennis_ai_model"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvbdzhoGM6Av_Mca1kAG0u0YB6djQFyZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
