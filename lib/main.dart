@@ -1,13 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_tennis_ai_model/features/auth/domain/use_case/register_usecase.dart';
+import 'package:weather_tennis_ai_model/core/network/dio_helper.dart';
 import 'package:weather_tennis_ai_model/features/auth/presention/controller/cubit/login_cubit.dart';
 import 'package:weather_tennis_ai_model/features/auth/presention/controller/cubit/register_cubit.dart';
 import 'package:weather_tennis_ai_model/features/splach_screen.dart';
-
 import 'bloc_observer.dart';
 import 'core/di/servier_locater.dart';
+import 'features/weather/presentition/controller/bloc/weather_cubit.dart';
 import 'firebase_options.dart';
 
 void main() async{
@@ -16,7 +16,8 @@ void main() async{
     options: DefaultFirebaseOptions.currentPlatform,
   );
   Bloc.observer = MyBlocObserver();
-  setupLocator(); // Make sure to call setupLocator() to register everything
+  setupLocator();
+    await DioHelper.internal();// Make sure to call setupLocator() to register everything
 
   runApp( MyApp());
 }
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
       ),
       BlocProvider(
         create: (context) => SignUpCubit(sl()),
+      ),
+      BlocProvider(
+        create:(context) => WeatherCubit(sl(),sl())..getCurrentCity(),
       ),
     ], child: MaterialApp(
       debugShowCheckedModeBanner: false,

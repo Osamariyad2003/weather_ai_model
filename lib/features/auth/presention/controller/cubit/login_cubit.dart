@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_tennis_ai_model/features/auth/data/model/user_model.dart';
 import 'package:weather_tennis_ai_model/features/auth/domain/use_case/register_usecase.dart';
 
 import '../../../domain/entities/login.dart';
@@ -9,6 +11,7 @@ class SignInCubit extends Cubit<SignInStates> {
   final SignInUseCase _signInUseCase;
 
   SignInCubit(this._signInUseCase) : super(SignInInitialState());
+  UserModel? userModel;
 
   // Retrieve the current cubit instance via the context.
   static SignInCubit of(BuildContext context) => BlocProvider.of<SignInCubit>(context);
@@ -19,19 +22,16 @@ class SignInCubit extends Cubit<SignInStates> {
     required String password,
     required BuildContext context,
   }) async {
-    // Emit loading state while the sign-in process is in progress.
     emit(SignInLoadingState());
 
-    // Create a SignInEntity object with the provided email and password.
     final userSignInEntity = SignInEntity(password: password, email: email);
 
     try {
-      // Execute the sign-in use case and await the result.
       final result = await _signInUseCase(userSignInEntity);
 
-      // Check if the result contains a valid user ID (uId).
       if (result.uId != null) {
-        // Emit success state if sign-in is successful.
+        userModel = result;
+
         emit(SignInSuccessState());
       } else {
         // Handle the case where the result does not contain a valid user ID.
@@ -54,5 +54,28 @@ class SignInCubit extends Cubit<SignInStates> {
 
     // Emit state change to update UI when password visibility is toggled.
     emit(SeePassState());
+  }
+  Future<UserModel?> getUserData() async {
+    try {
+      emit(GetUserLoadingState());
+
+      // Fetch user data from Firestore
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userModel?.uId)
+          .get();
+
+      if (documentSnapshot.exists) {
+        userModel = UserModel.fromJson(documentSnapshot.data()!);
+        emit(GetUserSuccessState());
+        return userModel;
+      } else {
+        emit(GetUserErrorState("User does not exist"));
+        return null;
+      }
+    } catch (error) {
+      emit(GetUserErrorState(error.toString()));
+      return null;
+    }
   }
 }

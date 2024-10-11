@@ -3,11 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_tennis_ai_model/core/utilies/strings.dart';
 import 'package:weather_tennis_ai_model/features/auth/domain/repositories/auth.dart';
 import 'package:weather_tennis_ai_model/features/auth/domain/use_case/register_usecase.dart';
+import 'package:weather_tennis_ai_model/features/home.dart';
 
 import '../../../../core/components/error_dialog.dart';
 import '../../../../core/components/routing.dart';
 import '../../../../core/components/toast.dart';
+import '../../../../core/di/servier_locater.dart';
 import '../../../../core/utilies/main_colors.dart';
+import '../../data/model/user_model.dart';
 import '../../data/repository/auth_imp.dart';
 import '../controller/cubit/login_cubit.dart';
 import '../controller/states/login_state.dart';
@@ -29,6 +32,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  UserModel? userModel;
 
 
   @override
@@ -36,11 +40,8 @@ class _SignInScreenState extends State<SignInScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return BlocConsumer<SignInCubit, SignInStates>(
-      listener: (context, state) {
-        if (state is SignInSuccessState) {
-          showToast(text: 'Login Successful', state: ToastStates.success);
-          // navigateTo(context, YourNextScreen()); // Navigate on success
-        } else if (state is SignInErrorState) {
+      listener: (context, state)async {
+        if (state is SignInErrorState) {
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -124,12 +125,24 @@ class _SignInScreenState extends State<SignInScreen> {
                       width: screenWidth * 0.95,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: ()async {
                           cubit.userSignIn(
                             email: emailController.text,
                             password: passwordController.text,
                             context: context,
                           );
+                          userModel = await cubit.getUserData();
+
+                          if (userModel != null) {
+                            navigateTo(context, HomeScreen(userModel!.name ?? "Null"));
+                            showToast(text: 'Login Successful', state: ToastStates.success);
+
+                          } else {
+                            showToast(text: "User data retrieval failed", state: ToastStates.error);
+                          }
+
+
+
                           //
                         },
                         style: ElevatedButton.styleFrom(
