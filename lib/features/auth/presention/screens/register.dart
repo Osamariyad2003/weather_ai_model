@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_tennis_ai_model/features/auth/presention/widgets/dialog.dart';
+import 'package:weather_tennis_ai_model/features/home.dart';
 
 import '../../../../core/components/error_dialog.dart';
+import '../../../../core/components/routing.dart';
 import '../../../../core/components/toast.dart';
 import '../../../../core/utilies/main_colors.dart';
 import '../../../../core/utilies/strings.dart';
@@ -29,7 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       listener: (context, state) {
         if (state is SignUpSuccessState) {
           showToast(text: 'Login Successful', state: ToastStates.success);
-          // navigateTo(context, YourNextScreen()); // Navigate on success
+          navigateTo(context, HomeScreen(nameController.text)); // Navigate on success
         } else if (state is SignUpErrorState) {
           showDialog(
             context: context,
@@ -125,11 +128,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
-                          cubit.userSignUp(
+                          showAlertDialog(context, (){ cubit.userSignUp(
                             email: emailController.text,
                             password: passwordController.text,
                             context: context, fullname: nameController.text,
                           );
+
+                          });
+
+
                           //
                         },
                         style: ElevatedButton.styleFrom(

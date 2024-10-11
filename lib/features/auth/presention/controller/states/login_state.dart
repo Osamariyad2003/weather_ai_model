@@ -12,6 +12,13 @@ class SignInErrorState extends SignInStates{
   SignInErrorState(this.error);
 }
 
+class GetUserLoadingState extends SignInStates {}
+class GetUserSuccessState extends SignInStates {}
+class GetUserErrorState extends SignInStates {
+  final String error;
+  GetUserErrorState(this.error);
+}
+
 
 
 class SeePassState extends SignInStates{}

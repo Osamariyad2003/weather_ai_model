@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_tennis_ai_model/core/utilies/main_colors.dart';
 
 class PublicButton extends StatelessWidget {
   final Color backgroundColor;
@@ -53,5 +54,61 @@ Widget defaultTextButton({
       child: Text(
         text.toUpperCase(),
         style: TextStyle(color:color ),
+      ),
+    );
+
+
+Widget defaultTextField({
+  required TextEditingController controller,
+  required TextInputType type,
+  onSubmit,
+  onChange,
+  onTap,
+  bool isPassword = false,
+  required  validate,
+  required String label,
+  IconData? prefix,
+  IconData? suffix,
+  VoidCallback? suffixPressed,
+  bool isClickable = true,
+}) =>
+    TextFormField(
+      controller: controller,
+      keyboardType: type,
+      obscureText: isPassword,
+      enabled: isClickable,
+      onFieldSubmitted: onSubmit,
+      onChanged: onChange,
+      onTap: onTap,
+      validator: validate,
+      decoration: InputDecoration(
+        hintText: label,
+
+
+
+        hintStyle: TextStyle(color: MainColors.mainColor.withOpacity(0.6)),
+        filled: true,
+        prefixIcon: Icon(
+            prefix,
+            color: MainColors.mainColor
+        ),
+        suffixIcon: suffix != null
+            ? IconButton(
+          onPressed: suffixPressed,
+          icon: Icon(
+            suffix,
+          ),
+        )
+            : null,
+        border: UnderlineInputBorder(
+          borderSide: BorderSide(color: MainColors.mainColor,width: 1),
+        ),
+        fillColor: Colors.white,
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: MainColors.mainColor,width: 2),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: MainColors.mainColor,width: 2),
+        ),
       ),
     );

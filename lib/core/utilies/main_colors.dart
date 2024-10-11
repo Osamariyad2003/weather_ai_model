@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class MainColors{
+  static Color mainColor = HexColor("#000F2F");
   static Color MainColor_one = HexColor("#00031e");
   static Color MainColor_two = HexColor("#001a3f");
   static Color field_color = HexColor("#242f4b");

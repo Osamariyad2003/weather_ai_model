@@ -5,7 +5,7 @@ import '../error/expception.dart';
 import '../utilies/strings.dart';
 
 class DioHelper {
-  static final DioHelper _instance = DioHelper._internal();
+  static final DioHelper _instance = DioHelper.internal();
 
   factory DioHelper() {
     return _instance;
@@ -13,7 +13,7 @@ class DioHelper {
 
   static Dio? _dio;
 
-  DioHelper._internal() {
+  DioHelper.internal() {
     BaseOptions baseOptions = BaseOptions(
       receiveDataWhenStatusError: true,
       contentType: "application/json",
@@ -74,9 +74,15 @@ class DioHelper {
 
   static Future<Response> getData({
     required String ?url,
+    Map<String, dynamic>? query,
+    String lang = 'en',
   }) async {
     try {
-      Response response = await _dio!.get(url!);
+      _dio?.options.headers =
+      {
+        'lang':lang,
+      };
+      Response response = await _dio!.get(url!,queryParameters: query);
 
       return response;
     } catch (e) {
