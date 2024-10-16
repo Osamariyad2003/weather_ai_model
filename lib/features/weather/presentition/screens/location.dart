@@ -105,22 +105,16 @@ class LocationScreen extends StatelessWidget {
               // Search Button
               ElevatedButton(
                 onPressed: () async{
-                  DateTime now = DateTime.now();
 
-                  // Format the date as YYYY-MM-DD
-                  String formattedDate = DateFormat('yyyy-MM-dd').format(now);
-                 await cubit.getForecastWeather( locationcotroller.text,formattedDate).then((value){
+                 await cubit.getForecastWeather( locationcotroller.text,cubit.selectedIndex).then((value)async{
+
                    if(cubit.getForecastWeatherUseCase != null){
                      cubit.bottomScreens[0] = WeatherScreen(cityName: locationcotroller.text,);
-
-
                    }else{
                      print("Error");
                    }
+
                  });
-
-
-
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue, // Button color

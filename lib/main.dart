@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         create: (context) => SignUpCubit(sl()),
       ),
       BlocProvider(
-        create:(context) => WeatherCubit(sl(),sl())..getCurrentCity(),
+        create:(context) => WeatherCubit(sl(),sl(),sl())..getCurrentCity(),
       ),
     ], child: MaterialApp(
       debugShowCheckedModeBanner: false,

@@ -2,6 +2,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class ActivityLineChart extends StatelessWidget {
+  final List<FlSpot> dataPoints;
+
+  ActivityLineChart({required this.dataPoints});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -13,18 +17,7 @@ class ActivityLineChart extends StatelessWidget {
           borderData: FlBorderData(show: true),
           lineBarsData: [
             LineChartBarData(
-              spots: [
-                FlSpot(0, 30),
-                FlSpot(1, 40),
-                FlSpot(2, 50),
-                FlSpot(3, 80),
-                FlSpot(4, 90),
-                FlSpot(5, 70),
-                FlSpot(6, 100),
-                FlSpot(7, 60),
-                FlSpot(8, 80),
-                FlSpot(9, 90),
-              ],
+              spots: dataPoints,
               isCurved: false, // You can make it curved or straight
               color: Colors.blue,
               barWidth: 4,

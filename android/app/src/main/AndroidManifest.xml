@@ -8,7 +8,8 @@
 
     <application
         android:label="weather_tennis_ai_model"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true">
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyADN-6JISorzrJe4o9ZjV_y8EihZUrud_0"/>
         <activity

@@ -18,16 +18,23 @@ class WeatherScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<WeatherCubit, WeatherStates>(
-      listener: (BuildContext context, WeatherStates state) {},
+      listener: (BuildContext context, WeatherStates state)async {
+        var cubit =context.read<WeatherCubit>();
+        if(state is ForacstGetSuccessState){
+          await cubit.getPrediction(cubit.selectedIndex, cubit.weatherForecast);
+
+        }
+      },
       builder: (context, state) {
+        var cubit = context.read<WeatherCubit>();
         if (state is ForacstGetLoadingState) {
           return Center(
             child: CircularProgressIndicator(),
           );
-        } else if (state is ForacstGetSuccessState) {
+        }
+        else if (state is ForacstGetSuccessState ) {
           final weatherData = state.weatherForecast;
           final forecastDays = weatherData?.forecastDays;
-          int selectedIndex = 0; // Variable to store selected index
 
           return ConditionalBuilder(
             condition: forecastDays != null,
@@ -45,11 +52,11 @@ class WeatherScreen extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           itemCount: forecastDays!.length,
                           itemBuilder: (context, index) {
-                            bool isSelected = selectedIndex == index;
-                            return InkWell(
-                              onTap: () {
-                                selectedIndex = index;
-                                context.read<WeatherCubit>().getForecastWeather(context.read<WeatherCubit>().currentAddress,forecastDays[index].date);
+                            bool isSelected =  cubit.selectedIndex == index;
+                            return GestureDetector(
+                              onTap: () async{
+                                cubit.changeForcastDay(index);
+                                await cubit.getForecastWeather(cityName,cubit.selectedIndex);
                               },
                               child: buildDateItem(
                                 forecastDays[index].date,
@@ -60,12 +67,18 @@ class WeatherScreen extends StatelessWidget {
                           },
                         ),
                       ),
-                      SizedBox(height: 10),
-                      _buildWeatherHeader(forecastDays[selectedIndex]),
-                      SizedBox(height: 10),
-                      _buildWeatherDetails(forecastDays[selectedIndex]),
-                      SizedBox(height: 15,),
-                      ActivityLineChart(),
+                      ConditionalBuilder(condition:forecastDays[cubit.selectedIndex] !=null  , builder: (context) => Column(
+                        children: [
+                          buildWeatherHeader(forecastDays[cubit.selectedIndex]),
+                          SizedBox(height: 10),
+                          buildWeatherDetails(forecastDays[cubit.selectedIndex]),
+                          SizedBox(height: 15,),
+                            ConditionalBuilder(condition:cubit.predictionSpots.length >0,
+                              builder: ( context) => ActivityLineChart(dataPoints: cubit.predictionSpots,),
+                              fallback: (context) => CircularProgressIndicator(color: Colors.white,),),
+                        ],
+                      ), fallback: (context) => CircularProgressIndicator(color: Colors.white,))
+
                     ],
                   ),
                 ),
@@ -112,8 +125,7 @@ class WeatherScreen extends StatelessWidget {
     );
   }
 
-  // Weather header (temperature and condition)
-  Widget _buildWeatherHeader(WeatherModel weather) {
+  Widget buildWeatherHeader(WeatherModel weather) {
     return Center(
       child: Column(
         children: [
@@ -135,8 +147,7 @@ class WeatherScreen extends StatelessWidget {
     );
   }
 
-  // Customized weather details section
-  Widget _buildWeatherDetails(WeatherModel weather) {
+  Widget buildWeatherDetails(WeatherModel weather) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [

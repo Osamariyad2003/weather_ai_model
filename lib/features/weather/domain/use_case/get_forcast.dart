@@ -6,7 +6,7 @@ class GetForecastWeatherUseCase {
 
   GetForecastWeatherUseCase(this.weatherRepository);
 
-  Future<WeatherForecast> execute(String cityName,Date) async {
-    return await weatherRepository.getForcastWeather(cityName,Date);
+  Future<WeatherForecast> execute(String cityName) async {
+    return await weatherRepository.getForcastWeather(cityName);
   }
 }

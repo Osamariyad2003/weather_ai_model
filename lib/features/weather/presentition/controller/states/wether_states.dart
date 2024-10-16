@@ -15,6 +15,13 @@ class ForacstGetErrorState extends WeatherStates{
   final String error;
   ForacstGetErrorState(this.error);
 }
+class ForcastDayChange extends WeatherStates{}
+class GetPredictionLoading extends WeatherStates{}
+class GetPredictionSuccess extends WeatherStates{}
+class GetPredictionError extends WeatherStates{
+  final String error;
+  GetPredictionError(this.error);
+}
 
 class WeatherBottomNavState extends WeatherStates{}
 class GetCurrentCityState extends WeatherStates{}
