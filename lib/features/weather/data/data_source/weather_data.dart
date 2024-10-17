@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_tennis_ai_model/core/components/constant.dart';
 import 'package:weather_tennis_ai_model/core/network/dio_helper.dart';
@@ -10,7 +11,7 @@ import 'package:http/http.dart' as http;
 
 abstract class BaseWeatherRemoteDataSource {
   Future<WeatherForecast> getForcastWeather(String cityName);
-  Future<void> getPrediction(int outlook, int temperature, int humidity);
+  Future<List<int>> getPrediction(List<int> features);
 }
 
 class WeatherRemoteDataImp extends BaseWeatherRemoteDataSource {
@@ -39,42 +40,36 @@ class WeatherRemoteDataImp extends BaseWeatherRemoteDataSource {
   }
 
   @override
-  Future<List<FlSpot>> getPrediction(int outlook, int temperature, int humidity) async {
-    try {
-      List<FlSpot> predictionSpots = [];
+  Future<List<int>> getPrediction(List<int> features) async {
+    final url = Uri.parse('http://10.0.2.2:5001/predict');
 
-      final response = await http.post(
-        Uri.parse('http://192.168.1.78:5001/predict'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, int>{
-          'outlook': outlook,
-          'temperature': temperature,
-          'humidity': humidity,
-        }),
-      );
+    // Create the POST request body
+    Map<String, dynamic> body = {
+      'features': features,
+    };
 
-      if (response.statusCode == 200) {
-        final result = jsonDecode(response.body);
+    // Send the POST request
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(body),
+    );
 
-        List<double> predictions = List<double>.from(result['predictions']);
-        predictionSpots = predictions
-            .asMap()
-            .entries
-            .map((e) => FlSpot(e.key.toDouble(), e.value))
-            .toList();
+    if (response.statusCode == 200) {
+      // Decode and ensure the response is properly cast to List<int>
+      final dynamic prediction = json.decode(response.body)['prediction'];
 
-         return predictionSpots;
+      // Debugging: print the raw prediction data
+      print('Raw prediction: $prediction');
 
-      } else {
-        throw Exception('Failed to get prediction');
-      }
-    } catch (e) {
-      throw Exception(e.toString());
+      // Convert the dynamic list to List<int> to match the expected return type
+      List<int> predictionData = List<int>.from(prediction.map((item) => item as int));
+
+      return predictionData;
+    } else {
+      print('Failed to get prediction');
+      return [0]; // Return a default value in case of failure
     }
   }
-
-
 
 }

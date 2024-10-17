@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -6,13 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:weather_tennis_ai_model/features/weather/data/model/weather.dart';
 import 'package:weather_tennis_ai_model/features/weather/domain/use_case/get_forcast.dart';
 import 'package:weather_tennis_ai_model/features/weather/domain/use_case/get_prediction.dart';
 import 'package:weather_tennis_ai_model/features/weather/presentition/screens/fav.dart';
 import 'package:weather_tennis_ai_model/features/weather/presentition/screens/location.dart';
 import 'package:weather_tennis_ai_model/features/weather/presentition/screens/profile.dart';
+import 'package:weather_tennis_ai_model/features/weather/presentition/screens/weather.dart';
 import '../../../data/repository/weather.dart';
 import '../states/wether_states.dart';
 enum SelectedTab{home,fav,profile,charts}
@@ -50,6 +49,9 @@ class WeatherCubit extends Cubit<WeatherStates>{
  void  changeBottomNavBar(int index) {
    selectedTab = SelectedTab.values[index];
    currentindex=index;
+   // if(currentAddress !=null)
+   //   bottomScreens[0]=WeatherScreen(cityName: currentAddress??"");
+
    emit(WeatherBottomNavState());
   }
   Future<void> getForecastWeather(String cityname,int index) async {
@@ -57,9 +59,12 @@ class WeatherCubit extends Cubit<WeatherStates>{
 
     try {
       final forecast = await getForecastWeatherUseCase.execute(cityname);
+      weatherForecast = forecast;
+      if(weatherForecast!=null)
+       getPrediction();
+      emit(ForacstGetSuccessState(forecast));
 
-
-      emit(ForacstGetSuccessState(forecast)); // Emit success with the data
+      // Emit success with the data
     } catch (error) {
       emit(ForacstGetErrorState(error.toString())); // Emit error if something goes wrong
     }
@@ -73,42 +78,50 @@ class WeatherCubit extends Cubit<WeatherStates>{
   }
   List<FlSpot> predictionSpots = [];
 
-  Future<void> getPrediction(int index,weatherForecast) async {
+  Future<void> getPrediction() async {
     emit(GetPredictionLoading());
     print('getPrediction started');  // Debug print
 
     try {
-      // Debug log to see the current forecast data
-      print('weatherForecast: $weatherForecast');
-      print('Number of forecast days: ${weatherForecast?.forecastDays?.length}');
-      print('Index: $index');
 
-      // Check if forecast data and index are valid
-      if (weatherForecast != null && weatherForecast!.forecastDays != null && index < weatherForecast!.forecastDays!.length) {
-        final forecast = weatherForecast!.forecastDays![index];
-        print('Forecast data: $forecast');  // Debug print
+      if (weatherForecast != null && weatherForecast?.forecastDays != null)  {
+        print('weatherForecast: $weatherForecast');
+        print('Number of forecast days: ${weatherForecast?.forecastDays?.length}');
+        print('Index: $weatherForecast');
+        final forecast = weatherForecast?.forecastDays?[0];
+       print('Forecast data: $forecast');  // Debug print
 
-        int conditionCode = 2;
+        int RaniyCode = 0;
+        int SunnyCode = 0;
+        int teempHigh = forecast!.tempC.toInt() >= 30? 1:0;
+        int teempMild = forecast.tempC.toInt() <= 30? 1:0;
+        int hum=forecast.humidity >50?1:0;
         switch (forecast.conditionText) {
           case "Sunny":
-            conditionCode = 0;
+            SunnyCode = 1;
             break;
-          case "Overcast":
-            conditionCode = 1;
+          case "Raniy":
+            RaniyCode = 1;
             break;
           default:
-            conditionCode = 2;
+            RaniyCode = 0;
+            SunnyCode=0;
             break;
         }
+        List<int> features= [SunnyCode,RaniyCode,teempHigh,teempMild,hum];
 
-        // Execute the prediction
+
         final result = await getPredictionWeatherUseCase.execute(
-            conditionCode,
-            forecast.tempC?.toInt() ?? 0,
-            forecast.humidity ?? 0
+           features
         );
+        predictionSpots = result.asMap().entries.map((v)
+        {
+          double index  = v.key.toDouble();
+          double value = v.value.toDouble();
+          return  FlSpot(index , value);
+        }
+        ).toList();
 
-        predictionSpots = result;
         print('Prediction result: $predictionSpots');  // Debug print
         emit(GetPredictionSuccess());
       } else {
@@ -119,6 +132,11 @@ class WeatherCubit extends Cubit<WeatherStates>{
       emit(GetPredictionError(e.toString()));
     }
   }
+
+   // void chartappper(w)async{
+   //  await getPrediction();
+   //  emit(GetChartSuccess());
+   // }
 
 
   Future<String> getCurrentCity() async {
