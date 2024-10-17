@@ -7,7 +7,7 @@ class GetPredictionWeatherUseCase {
 
   GetPredictionWeatherUseCase(this.weatherRepository);
 
-  Future<List<FlSpot>> execute(int outlook, int temperature, int humidity) async {
-    return await weatherRepository.getPrediction(outlook,temperature,humidity);
+  Future<List<int>> execute(List<int> features) async {
+    return await weatherRepository.getPrediction( features);
   }
 }

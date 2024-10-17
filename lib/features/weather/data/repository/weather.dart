@@ -16,8 +16,8 @@ class WeatherRepositoryImpl  {
 
   }
   @override
-  Future<List<FlSpot>> getPrediction(int outlook, int temperature, int humidity)async{
-    final result = await weatherRemoteDataSource.getPrediction(outlook, temperature, humidity);
+  Future<List<int>> getPrediction(List<int> features)async{
+    final result = await weatherRemoteDataSource.getPrediction( features);
     return result;
   }
 }

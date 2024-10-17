@@ -22,6 +22,7 @@ class GetPredictionError extends WeatherStates{
   final String error;
   GetPredictionError(this.error);
 }
+class GetChartSuccess extends WeatherStates{}
 
 class WeatherBottomNavState extends WeatherStates{}
 class GetCurrentCityState extends WeatherStates{}

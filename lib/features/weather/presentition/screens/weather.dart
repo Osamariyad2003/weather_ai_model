@@ -1,10 +1,7 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_tennis_ai_model/core/components/routing.dart';
 import 'package:weather_tennis_ai_model/features/weather/data/model/weather.dart';
-import 'package:weather_tennis_ai_model/features/weather/presentition/widgets/day.dart';
-
 import '../../../../core/components/error_dialog.dart';
 import '../../../../core/utilies/main_colors.dart';
 import '../controller/bloc/weather_cubit.dart';
@@ -19,11 +16,6 @@ class WeatherScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<WeatherCubit, WeatherStates>(
       listener: (BuildContext context, WeatherStates state)async {
-        var cubit =context.read<WeatherCubit>();
-        if(state is ForacstGetSuccessState){
-          await cubit.getPrediction(cubit.selectedIndex, cubit.weatherForecast);
-
-        }
       },
       builder: (context, state) {
         var cubit = context.read<WeatherCubit>();
@@ -32,8 +24,8 @@ class WeatherScreen extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         }
-        else if (state is ForacstGetSuccessState ) {
-          final weatherData = state.weatherForecast;
+        else if (state is ForacstGetSuccessState || state is! ForacstGetErrorState ||state is! ForacstGetLoadingState) {
+          final weatherData = cubit.weatherForecast;
           final forecastDays = weatherData?.forecastDays;
 
           return ConditionalBuilder(
@@ -53,7 +45,7 @@ class WeatherScreen extends StatelessWidget {
                           itemCount: forecastDays!.length,
                           itemBuilder: (context, index) {
                             bool isSelected =  cubit.selectedIndex == index;
-                            return GestureDetector(
+                           return GestureDetector(
                               onTap: () async{
                                 cubit.changeForcastDay(index);
                                 await cubit.getForecastWeather(cityName,cubit.selectedIndex);
@@ -73,9 +65,9 @@ class WeatherScreen extends StatelessWidget {
                           SizedBox(height: 10),
                           buildWeatherDetails(forecastDays[cubit.selectedIndex]),
                           SizedBox(height: 15,),
-                            ConditionalBuilder(condition:cubit.predictionSpots.length >0,
-                              builder: ( context) => ActivityLineChart(dataPoints: cubit.predictionSpots,),
-                              fallback: (context) => CircularProgressIndicator(color: Colors.white,),),
+                          ConditionalBuilder(condition:cubit.predictionSpots.length >0,
+                            builder: ( context) => ActivityLineChart(dataPoints: cubit.predictionSpots,),
+                            fallback: (context) => CircularProgressIndicator(color: Colors.white,),),
                         ],
                       ), fallback: (context) => CircularProgressIndicator(color: Colors.white,))
 
@@ -176,6 +168,9 @@ class WeatherScreen extends StatelessWidget {
     );
   }
 }
+
+
+
 
 
 

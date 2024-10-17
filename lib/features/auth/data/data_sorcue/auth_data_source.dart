@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import '../model/user_model.dart';
 
 class AuthRemoteDataSourceFirebase {
-  // Constructor with optional firebaseAuth injection for testing or flexibility
   AuthRemoteDataSourceFirebase({
     firebase_auth.FirebaseAuth? firebaseAuth,
   }) : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance;

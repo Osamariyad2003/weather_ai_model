@@ -9,29 +9,40 @@ file_path = "random_forest_model.pkl"  # Path to the model file
 with open(file_path, 'rb') as file:
     model = pickle.load(file)
 
-
 # Define a route for the home page
 @app.route('/')
 def home():
     return "Welcome to the ML Prediction API!"
 
-
 # Define the prediction route
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.json  # Get the JSON data from the request
-    features = data['features']  # Extract the features
+    try:
+        data = request.json
 
-    # Convert to 2D array (since the model expects 2D input)
-    features = np.array(features).reshape(1, -1)
+        if 'features' not in data or not isinstance(data['features'], list):
+            return jsonify({"error": "Invalid input: 'features' key is required and must be a list."}), 400
 
-    # Make the prediction
-    prediction = model.predict(features)
+        features = data['features']  # Extract the features
 
-    # Return the prediction as JSON
-    return jsonify({'prediction': prediction.tolist()})
+        if len(features) != 5:  # Adjust this if your model requires a different number of features
+            return jsonify({"error": f"Invalid number of features: expected 5, got {len(features)}."}), 400
+
+        features = np.array(features).reshape(1, -1)
+
+        # Make the prediction
+        predictions = model.predict(features)
+
+        predictions = predictions.astype(int).tolist()  # Ensure the predictions are in list format of integers
+
+        return jsonify({'predictions': predictions})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
+
+
 
