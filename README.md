@@ -24,11 +24,11 @@ Key highlights include:
 - **AI/ML Models** for weather predictions (if applicable)  
 
 ## ScreenShots
-![Splach Screen](screenshoots/splach.jpg)
-![Auth Screen](screenshoots/auth.jpg)
-![Sign Up Screen](screenshoots/sign_up.jpg)
-![Home Screen](screenshoots/home.jpg)
-![Weather&Perdiction Screen](screenshoots/temp.jpg)
+![Splach Screen](screenshots/splach.jpg)
+![Auth Screen](screenshots/auth.jpg)
+![Sign Up Screen](screenshots/sign_up.jpg)
+![Home Screen](screenshots/home.jpg)
+![Weather&Perdiction Screen](screenshots/temp.jpg)
 
 
 
