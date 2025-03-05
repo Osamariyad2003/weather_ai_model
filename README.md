@@ -24,7 +24,13 @@ Key highlights include:
 - **AI/ML Models** for weather predictions (if applicable)  
 
 ## ScreenShots
-![Login Screen]
+![Splach Screen](screenshoots/splach.jpg)
+![Auth Screen](screenshoots/auth.jpg)
+![Sign Up Screen](screenshoots/sign_up.jpg)
+![Home Screen](screenshoots/home.jpg)
+![Weather&Perdiction Screen](screenshoots/temp.jpg)
+
+
 
 1. Clone the repository:  
    ```bash
