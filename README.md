@@ -1,16 +1,32 @@
-# weather_tennis_ai_model
+# Weather-AI 🌦️🤖
 
-A new Flutter project.
+## Description  
+Weather-AI is a Flutter-based mobile application that provides real-time weather updates with a **Clean Architecture** approach, ensuring scalability and maintainability. The app delivers accurate forecasts, detailed weather insights, and interactive features for user convenience.  
 
-## Getting Started
+Key highlights include:  
+- **Real-time weather updates** via APIs  
+- **AI-driven predictions** for enhanced forecast accuracy  
+- **Secure authentication** for user privacy  
+- **Cubit state management** for efficiency  
+- **Layered architecture** for better testability and scalability  
+- **Modern and user-friendly UI** for an optimal experience  
 
-This project is a starting point for a Flutter application.
+## Features  
+✅ **Authentication** – Secure login and registration  
+✅ **Home Screen** – Displays real-time weather and temperature updates  
+✅ **AI Predictions** – Intelligent weather forecasting using AI models  
 
-A few resources to get you started if this is your first Flutter project:
+## Technologies Used  
+- **Flutter** (Dart)  
+- **Cubit** for state management  
+- **REST APIs** for real-time weather data  
+- **Firebase** (if used for authentication or backend)  
+- **AI/ML Models** for weather predictions (if applicable)  
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## ScreenShots
+![Login Screen]
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone the repository:  
+   ```bash
+   git clone https://github.com/Osamariyad2003/weather-ai-model.git
+
