@@ -26,19 +26,19 @@ Key highlights include:
 ## ScreenShots
 
 ### Splach Screen
-<img src="screenshots/splach.jpg" alt="Splash Screen" width="500" height="100"/>
+<img src="screenshots/splach.jpg" alt="Splash Screen" width="500" height="400"/>
 
 ### Auth Screen
-<img src="screenshots/auth.jpg" alt="Splash Screen" width="500" height="100"/>
+<img src="screenshots/auth.jpg" alt="Splash Screen" width="500" height="400"/>
 
 ### Sign Up Screen 
-<img src="screenshots/sign_up.jpg" alt="Splash Screen" width="500" height="100"/>
+<img src="screenshots/sign_up.jpg" alt="Splash Screen" width="500" height="400"/>
 
 ### Home Screen 
-<img src="screenshots/home.jpg" alt="Splash Screen" width="500" height="100"/>
+<img src="screenshots/home.jpg" alt="Splash Screen" width="500" height="400"/>
 
 ### Weather&Prediction Screen
-<img src="screenshots/temp.jpg" alt="Splash Screen" width="500" height="100"/>
+<img src="screenshots/temp.jpg" alt="Splash Screen" width="500" height="400"/>
 
 
 
